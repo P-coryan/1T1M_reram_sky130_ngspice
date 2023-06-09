@@ -1,0 +1,97 @@
+** sch_path: /foss/designs/Tesis/CrossBar.sch
+**.subckt CrossBar vw1 vw2 vw3 vw4 Vdata V_RW
+*.ipin vw1
+*.ipin vw2
+*.ipin vw3
+*.ipin vw4
+*.ipin Vdata
+*.ipin V_RW
+x1 VHRS VLRS Vdata GND VSS VDD VGND net8 sky130_fd_sc_hd__mux2_2
+x2 Vref net8 V_RW GND VSS VDD GND net3 sky130_fd_sc_hd__mux2_2
+x3 GND VDD V_RW GND GND VSS GND net2 sky130_fd_sc_hd__mux2_2
+XR1 net3 net4 sky130_fd_pr_reram__reram_cell Tfilament_0=3.3e-9
+XR2 net3 net5 sky130_fd_pr_reram__reram_cell Tfilament_0=3.3e-9
+XR3 net3 net6 sky130_fd_pr_reram__reram_cell Tfilament_0=3.3e-9
+XR4 net3 net7 sky130_fd_pr_reram__reram_cell Tfilament_0=3.3e-9
+XM1 net4 vw1 net1 net1 sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XM2 net5 vw2 net1 net1 sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XM3 net6 vw3 net1 net1 sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XM4 net7 vw4 net1 net1 sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XM5 net1 net2 GND GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XM6 net1 net2 VDD VDD sky130_fd_pr__pfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+V1 VDD GND 3
+.save i(v1)
+V2 Vref GND 0.6
+.save i(v2)
+V3 VLRS GND 1
+.save i(v3)
+V4 VHRS GND -1
+.save i(v4)
+V5 VSS GND -3
+.save i(v5)
+**** begin user architecture code
+
+
+*Read negado y Write
+V_RW  V_RW  V_RW1    PULSE(5 0 10m 10p 10p 10m 20m)
+V_RW1 V_RW1 V_RW2    PULSE(0 5 30m 10p 10p 10m 20m)
+V_RW2 V_RW2 V_RW3    PULSE(0 -5 50m 10p 10p 10m 20m)
+V_RW3 V_RW3 V_RW4    PULSE(0 5  90m 10p 10p 10m 20m)
+V_RW4 V_RW4 0        PULSE(0 -5  110m 10p 10p 10m 20m)
+
+
+Vdata Vdata VDATA_N01 PULSE(0 5 30m 10p 10p 10m 20m)
+VDATA_N01 VDATA_N01 0 PULSE(0 -5 50m 10p 10p 10m 20m)
+VDATA_N02 VDATA_N02 0 PULSE(0 -5 110m 10p 10p 10m 20m)
+
+*Word Line 1
+vw1 vw1 VW1_N01 PULSE(0 5 10m 10p 10p 10m 20m)
+VW1_N01 VW1_N01 VW1_N02 PULSE(0 -5 90m 10p 10p 10m 20m)
+VW1_N02 VW1_N02 0 PULSE(0 5 130m 10p 10p 10m 20m)
+
+*Word Line 2
+vw2       vw2      VW2_N01    PULSE(0 5 10m 10p 10p 10m 20m)
+VW2_N01   VW2_N01  VW2_N02    PULSE(0 -5 30m 10p 10p 10m 20m)
+VW2_N02   VW2_N02  VW2_N03    PULSE(0  5 70m 10p 10p 10m 20m)
+VW2_N03   VW2_N03  0          PULSE(0  -5 90m 10p 10p 10m 20m)
+
+*Word Line 3
+vw3 vw3 VW3_N01 PULSE(0 5 90m 10p 10p 10m 20m)
+VW3_N01 VW3_N01 0 PULSE(0 -5 130m 10p 10p 10m 20m)
+
+*Word Line
+vw4 vw4 0 PULSE(0 5 130m 10p 10p 10m 20m)
+
+
+
+.tran 0 150m 0 1u
+
+.inc /foss/pdks/sky130B/libs.tech/ngspice/sky130_fd_pr_reram__reram_cell.spice
+
+.control
+set filetype=ascii
+.endc
+
+.end
+
+**** end user architecture code
+**.ends
+.GLOBAL VDD
+.GLOBAL GND
+.GLOBAL Vref
+.GLOBAL VHRS
+.GLOBAL VLRS
+.GLOBAL VSS
+.end
