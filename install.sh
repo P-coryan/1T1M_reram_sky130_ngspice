@@ -21,6 +21,8 @@ rm openvaf
 
 # Update spice netlist according to env
 sed -i "s|/foss/pdks|$PDK_ROOT|g" ngspice/sky130_fd_pr_reram__reram_cell.spice
+sed -i "s|/foss/pdks|$PDK_ROOT|g" ngspice/sky130.lib.spice
+sed -i "s|/foss/pdks|$PDK_ROOT|g" ngspice/sky130_fd_sc_hd__mux2_2.spice
 sed -i "s|/foss/pdks|$PDK_ROOT|g" ngspice/CrossBar.spice
 
 # Copy model, spice file and example netlist
