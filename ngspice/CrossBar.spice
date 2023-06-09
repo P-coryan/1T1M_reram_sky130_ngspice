@@ -79,7 +79,7 @@ vw4 vw4 0 PULSE(0 5 130m 10p 10p 10m 20m)
 .tran 0 150m 0 1u
 
 .inc /foss/pdks/sky130B/libs.tech/ngspice/sky130_fd_pr_reram__reram_cell.spice
-
+.lib /foss/pdks/sky130B/libs.tech/ngspice/sky130.lib.spice tt
 .control
 set filetype=ascii
 .endc
