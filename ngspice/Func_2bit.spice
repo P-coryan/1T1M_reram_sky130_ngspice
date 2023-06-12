@@ -1,0 +1,56 @@
+** sch_path: /foss/designs/Tesis/Simulaciones/xschem/Func_2bit.sch
+**.subckt Func_2bit vmem vw1 vw2
+*.ipin vmem
+*.ipin vw1
+*.ipin vw2
+XM1 net1 vw1 GND GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XM2 net2 vw2 GND GND sky130_fd_pr__nfet_01v8 L=0.15 W=1 nf=1 ad='int((nf+1)/2) * W/nf * 0.29' as='int((nf+2)/2) * W/nf * 0.29'
++ pd='2*int((nf+1)/2) * (W/nf + 0.29)' ps='2*int((nf+2)/2) * (W/nf + 0.29)' nrd='0.29 / W' nrs='0.29 / W'
++ sa=0 sb=0 sd=0 mult=1 m=1
+XR1 vmem net1 sky130_fd_pr_reram__reram_cell Tfilament_0=3.8e-9
+XR2 vmem net2 sky130_fd_pr_reram__reram_cell Tfilament_0=3.8e-9
+**** begin user architecture code
+
+
+vmem vmem vmem1 PULSE (0 1.8 0.2n 10p 10p 100u 200u 1)
+vmem1 vmem1 0 PULSE (0 -1.8 300u 10p 10p 100u 200u 1 )
+
+vw1 vw1 0 PULSE (0 1.8 0.2n 10p 10p 100u 200u 1 )
+vw2 vw2 0 PULSE (0 1.8 300u 10p 10p 100u 200u 1 )
+
+
+.tran 0.1n 1.5u
+.inc /foss/pdks/sky130B/libs.tech/ngspice/sky130_fd_pr_reram__reram_cell.spice
+.lib /foss/pdks/sky130B/libs.tech/ngspice/sky130.lib.spice tt
+
+.control
+set filetype=ascii
+.endc
+
+.end
+
+
+**** end user architecture code
+**.ends
+.GLOBAL GND
+**** begin user architecture code
+
+.subckt sky130_fd_pr_reram__reram_cell TE BE Tfilament_0=3.3e-9 area_ox=0.1024e-12
+N1 TE BE nFilament sky130_fd_pr_reram__reram_model
+.ic v(nFilament)={Tfilament_0*1.0e9}
+.ends sky130_fd_pr_reram__reram_cell
+
+.model sky130_fd_pr_reram__reram_model sky130_fd_pr_reram__reram_module area_ox=0.1024e-12  area_ox
++ = 0.1024e-12  Tox = 5.0  Tfilament_max = 4.9  Tfilament_min = 3.3  Eact_generation = 1.501
++  Eact_recombination  = 1.500  I_k1  = 6.140e-5  Tfilament_ref = 4.7249  V_ref = 0.430  velocity_k1 = 150  gamma_k0  =
++ 16.5  gamma_k1  = -1.25  Temperature_0 = 300  C_thermal = 3.1825e-16  tau_thermal = 0.23e-9  t_step  =
++ 1.0e-9  smoothing = 1e-7  Kclip = 200
+
+.control
+pre_osdi /foss/pdks/sky130A/libs.tech/ngspice/sky130_fd_pr_reram__reram_module.osdi
+.endc
+
+**** end user architecture code
+.end
